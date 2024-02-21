@@ -107,7 +107,7 @@ void loop() {
       moving = true;
     }
 
-    if (stopUpSensor.isHold()) {
+    if (stopUpSensor.isHold() && !motionDetected) {
       stepper.brake();
       digitalWrite(7, HIGH); // снятие напряжения без библиотеки
       flag = false;
@@ -122,7 +122,7 @@ void loop() {
       moving = true;
     }
 
-    if (stopDownSensor.isHold()) {
+    if (stopDownSensor.isHold() && !motionDetected) {
       stepper.brake();
       digitalWrite(7, HIGH); // снятие напряжения без библиотеки
       flag = false;
