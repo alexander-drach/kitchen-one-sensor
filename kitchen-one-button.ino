@@ -57,18 +57,20 @@ void loop() {
 
   motionDetected = !digitalRead(12);
 
-  if (hand.isPress()) {
-    Serial.println("hand sunul ruku STOP"); // проверка на руку
+  if (hand.isPress() || hand.isHold()) {
+    // Serial.println("hand sunul ruku STOP"); // проверка на руку
     stepper.brake();
     // stepper.autoPower(true); // снятие напряжения
     flag = false;
+    statePositionDown = true;
+    statePositionUp = false;
   }
 
   if (stopDownSensor.isPress()) {// остановка фартука внизу ДАТЧИК - 0
     stepper.brake();
     digitalWrite(7, HIGH); // снятие напряжения без библиотеки
     flag = false;
-    Serial.println("doehal vniz");
+    // Serial.println("doehal vniz");
     statePositionDown = true;
     statePositionUp = false;
     moving = false;
@@ -79,21 +81,37 @@ void loop() {
     stepper.brake();
     digitalWrite(7, HIGH); // снятие напряжения без библиотеки
     flag = false;
-    Serial.println("doehal vverh");
+    // Serial.println("doehal vverh");
     statePositionUp = true;
     statePositionDown = false;
     moving = false;
     digitalWrite(7, HIGH);
   }
 
+  if (statePositionDown && moving) {
+    if (slowUpSpeed.isPress()) { // замедление скорости вверху ДАТЧИК - 2
+      stepper.setSpeed(200);
+      // Serial.println("slowUpSpeed");
+    }
+  }
+
+  if (statePositionUp && moving) {
+    if (slowDownSpeed.isPress()) { // замедление скорости внизу ДАТЧИК - 1  
+      stepper.setSpeed(-200);
+      // Serial.println("slowDownSpeed");
+    }
+  }
+
   if (motionDetected) {
-    Serial.println("moveUp"); // движение фартука вверх по сенсору вверх/вниз
+    // Serial.println("moveUp"); // движение фартука вверх по сенсору вверх/вниз
 
     digitalWrite(7, LOW); 
 
     if (!firstMotionDetected) {
       stepper.setSpeed(speed);
       firstMotionDetected = true;
+      statePositionDown = true;
+      statePositionUp = false;
       moving = true;
     }
 
@@ -111,7 +129,7 @@ void loop() {
       stepper.brake();
       digitalWrite(7, HIGH); // снятие напряжения без библиотеки
       flag = false;
-      Serial.println("doehal vverh");
+      // Serial.println("doehal vverh");
       statePositionUp = true;
       statePositionDown = false;
       moving = false;
@@ -126,7 +144,7 @@ void loop() {
       stepper.brake();
       digitalWrite(7, HIGH); // снятие напряжения без библиотеки
       flag = false;
-      Serial.println("doehal vniz");
+      // Serial.println("doehal vniz");
       statePositionDown = true;
       statePositionUp = false;
       moving = false;
@@ -135,20 +153,6 @@ void loop() {
     if (stopDownSensor.isHold() && motionDetected) {
       stepper.setSpeed(speed);
       moving = true;
-    }
-  }
-
-  if (statePositionDown && moving) {
-    if (slowUpSpeed.isPress()) { // замедление скорости вверху ДАТЧИК - 2
-      stepper.setSpeed(200);
-      Serial.println("slowUpSpeed");
-    }
-  }
-
-  if (statePositionUp && moving) {
-    if (slowDownSpeed.isPress()) { // замедление скорости внизу ДАТЧИК - 1  
-      stepper.setSpeed(-200);
-      Serial.println("slowDownSpeed");
     }
   }
 }
