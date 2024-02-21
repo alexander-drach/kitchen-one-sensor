@@ -102,9 +102,8 @@ void loop() {
     }
   }
 
-  if (motionDetected) {
+  if (motionDetected && !hand.isHold()) {
     // Serial.println("moveUp"); // движение фартука вверх по сенсору вверх/вниз
-
     digitalWrite(7, LOW); 
 
     if (!firstMotionDetected) {
