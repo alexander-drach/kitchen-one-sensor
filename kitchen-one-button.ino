@@ -7,8 +7,6 @@ GButton slowDownSpeed(3);
 GButton slowUpSpeed(4);
 GButton stopUpSensor(5);
 
-// GButton hand(6);
-
 GStepper<STEPPER2WIRE> stepper(200, 11, 10);
 
 int speed = 400;
@@ -43,11 +41,6 @@ void loop() {
 
   slowUpSpeed.tick();
   stopUpSensor.tick();
-
-  // hand.tick();
-
-  // moveUp.tick();
-  // moveDown.tick();
 
   stepper.tick();
 
