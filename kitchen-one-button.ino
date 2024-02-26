@@ -101,11 +101,11 @@ void loop() {
     }
   }
 
-  if (motionDetected && !handSensor) {
+  if (motionDetected && !handSensor) { // если коснулись датчик движения и не сработал датчик движения руки, выполняем разные действия ГЛАВНОЕ УСЛОВИЕ
     // Serial.println("moveUp"); // движение фартука вверх по сенсору вверх/вниз
     digitalWrite(7, LOW); 
 
-    if (!firstMotionDetected) {
+    if (!firstMotionDetected) { // если это ПЕРВЫЙ СТАРТ то поехали наверх
       stepper.setSpeed(speed);
       firstMotionDetected = true;
       statePositionDown = true;
@@ -113,17 +113,17 @@ void loop() {
       moving = true;
     }
 
-    if (firstMotionDetected && statePositionDown) {
+    if (firstMotionDetected && statePositionDown) { // если НЕ ПЕРВЫЙ СТАРТ и фартук низу то поехали ВВЕРХ
       stepper.setSpeed(speed);
       moving = true;
     }
 
-    if (firstMotionDetected && statePositionUp) {
+    if (firstMotionDetected && statePositionUp) { // если НЕ ПЕРВЫЙ СТАРТ и фартук вверху то поехали ВНИЗ
       stepper.setSpeed(-speed);
       moving = true;
     }
 
-    if (stopUpSensor.isHold() && !motionDetected) {
+    if (stopUpSensor.isHold() && !motionDetected) { // если не касаемся датчика движения фартука и нажали датчик ВВЕРХУ то ОСТАНОВИЛИСЬ
       stepper.brake();
       digitalWrite(7, HIGH); // снятие напряжения без библиотеки
       flag = false;
@@ -133,12 +133,7 @@ void loop() {
       moving = false;
     }
 
-    if (stopUpSensor.isHold() && motionDetected) {
-      stepper.setSpeed(-speed);
-      moving = true;
-    }
-
-    if (stopDownSensor.isHold() && !motionDetected) {
+    if (stopDownSensor.isHold() && !motionDetected) { // если не касаемся датчика движения фартука и нажали датчик ВНИЗУ то ОСТАНОВИЛИСЬ
       stepper.brake();
       digitalWrite(7, HIGH); // снятие напряжения без библиотеки
       flag = false;
@@ -148,7 +143,12 @@ void loop() {
       moving = false;
     }
 
-    if (stopDownSensor.isHold() && motionDetected) {
+    if (stopUpSensor.isHold() && motionDetected) { // если нажат и удерживается датчик вверху и коснулись датчик движения фартука то ПОЕХАЛ ВНИЗ
+      stepper.setSpeed(-speed);
+      moving = true;
+    }
+
+    if (stopDownSensor.isHold() && motionDetected) { // если нажат нажний датчик и удерживается и коснулись датчика движения фартука, то ПОЕХАЛ ВВЕРХ
       stepper.setSpeed(speed);
       moving = true;
     }
