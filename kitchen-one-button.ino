@@ -7,17 +7,11 @@ GButton slowDownSpeed(3);
 GButton slowUpSpeed(4);
 GButton stopUpSensor(5);
 
-GButton hand(6);
-
-// GButton moveUp(7);
-// GButton moveDown(8);
-// GButton buttonSensor(12);
-
-// byte buttonSensor;
+// GButton hand(6);
 
 GStepper<STEPPER2WIRE> stepper(200, 11, 10);
 
-int speed = 800;
+int speed = 400;
 
 bool flag = false;
 
@@ -30,6 +24,8 @@ bool statePositionUp = false;
 bool statePositionDown = false;
 
 bool moving = false;
+
+bool handSensor = false;
 
 void setup() {
   Serial.begin(9600);
@@ -48,7 +44,7 @@ void loop() {
   slowUpSpeed.tick();
   stopUpSensor.tick();
 
-  hand.tick();
+  // hand.tick();
 
   // moveUp.tick();
   // moveDown.tick();
@@ -56,8 +52,11 @@ void loop() {
   stepper.tick();
 
   motionDetected = !digitalRead(12);
+  handSensor = digitalRead(6);
 
-  if (hand.isPress() || hand.isHold()) {
+  Serial.println(handSensor);
+
+  if (handSensor) {
     // Serial.println("hand sunul ruku STOP"); // проверка на руку
     stepper.brake();
     // stepper.autoPower(true); // снятие напряжения
@@ -102,7 +101,7 @@ void loop() {
     }
   }
 
-  if (motionDetected && !hand.isHold()) {
+  if (motionDetected && !handSensor) {
     // Serial.println("moveUp"); // движение фартука вверх по сенсору вверх/вниз
     digitalWrite(7, LOW); 
 
