@@ -47,8 +47,6 @@ void loop() {
   motionDetected = !digitalRead(12);
   handSensor = digitalRead(6);
 
-  Serial.println(handSensor);
-
   if (handSensor) {
     // Serial.println("hand sunul ruku STOP"); // проверка на руку
     stepper.brake();
@@ -101,8 +99,8 @@ void loop() {
     if (!firstMotionDetected) { // если это ПЕРВЫЙ СТАРТ то поехали наверх
       stepper.setSpeed(speed);
       firstMotionDetected = true;
-      statePositionDown = true;
-      statePositionUp = false;
+      statePositionDown = false;
+      statePositionUp = true;
       moving = true;
     }
 
