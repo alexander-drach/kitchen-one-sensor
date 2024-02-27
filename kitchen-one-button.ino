@@ -52,8 +52,6 @@ void loop() {
     stepper.brake();
     // stepper.autoPower(true); // снятие напряжения
     flag = false;
-    statePositionDown = true;
-    statePositionUp = false;
   }
 
   if (stopDownSensor.isPress()) {// остановка фартука внизу ДАТЧИК - 0
